@@ -17,7 +17,7 @@ display: none;
 const Success = styled.h1`
 text-align: center;
 color: green;
-display: none;
+display: ${({ Success }) => Success ? "block" : "none"};
 `
 
 const FormContainer = styled.div`
@@ -80,6 +80,8 @@ function App() {
   const [applicant, setApplicant] = useState("Andreas jakobsen");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const URL = "https://case.nettbureau.no/submit";
   const method = "post";
@@ -103,8 +105,7 @@ function App() {
         const json = await response.json();
         console.log(json)
         if (response.ok) {
-          styled.Success`
-          display: block;`
+          setSuccess(true);
         }
         else {
 
