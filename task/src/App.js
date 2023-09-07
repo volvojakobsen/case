@@ -11,13 +11,11 @@ text-align: center;
 const Error = styled.h1`
 text-align: center;
 color: red;
-display: none;
 `
 
-const Success = styled.h1`
+const Sent = styled.h1`
 text-align: center;
 color: green;
-display: ${({ Success }) => Success ? "block" : "none"};
 `
 
 const FormContainer = styled.div`
@@ -90,7 +88,7 @@ function App() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const formValues = { name, address, postal, city, email, phone, gender, applicant };
+    const formValues = { name, address, postal, city, email, phone, gender, applicant, password };
     const stringify = JSON.stringify(formValues);
 
     async function sendForm() {
@@ -108,7 +106,7 @@ function App() {
           setSuccess(true);
         }
         else {
-
+          setError(true);
         }
       } catch (error) {
         console.log(error)
@@ -131,14 +129,14 @@ function App() {
         <Form action="" onSubmit={handleSubmit}>
           <FormFields>
             <Div>
-              <label htmlFor="name">Fornavn:</label>
+              <label htmlFor="name">navn:</label>
               <input type="text" name="first" id='name' placeholder='Ola' minLength={2} maxLength={20} required onChange={(e) => setName(e.target.value)} />
               <label htmlFor="mail">Epost:</label>
-              <input type="email" name="email" id='mail' placeholder='ola@eksempel.no' onChange={(e) => setEmail(e.target.value)} />
+              <input type="email" name="email" id='mail' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder='ola@eksempel.no' required onChange={(e) => setEmail(e.target.value)} />
               <label htmlFor="mobile">Mobil:</label>
               <input type="number" name="mobil" id='mobile' placeholder='tlf Nummer' minLength={8} maxLength={12} required onChange={(e) => setPhone(e.target.value)} />
               <label htmlFor="address">Adresse:</label>
-              <input type="text" name="adresse" id='address' placeholder='Rådhusgata 2' required onChange={(e) => setAddress(e.target.value)} />
+              <input type="text" name="adresse" id='address' placeholder='Rådhusgata 2' required minLength={2} maxLength={30} onChange={(e) => setAddress(e.target.value)} />
               <label htmlFor="postal">Postkode:</label>
               <input type='number' id='postal' name='postkode' placeholder='0000' maxLength={4} required onChange={(e) => setPostal(e.target.value)} />
               <label htmlFor="city">By:</label>
@@ -153,13 +151,17 @@ function App() {
                 <input type='radio' name='kjønn' id='dame' value="dame" required onChange={(e) => setGender(e.target.value)} />
               </Div>
               <label htmlFor="password">Passord:</label>
-              <input type='password' id='password' name='password' required onChange={(e) => setPassword(e.target.value)} />
+              <input type='password' id='password' name='password' minLength={8} pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$' title='the password must be 8-16 characters long and must contain lower and uppercase letters. at least 1 number and at least 1 special character' maxLength={16} required onChange={(e) => setPassword(e.target.value)} />
               <label htmlFor="password-2">Gjenta-Passord:</label>
-              <input type='password' id='password-2' name='password_2' required onChange={(e) => setPassword2(e.target.value)} />
+              <input type='password' id='password-2' name='password_2' minLength={8} pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$' title='the password must be 8-16 characters long and must contain lower and uppercase letters. at least 1 number and at least 1 special character' maxLength={16} required onChange={(e) => setPassword2(e.target.value)} />
             </Div>
           </FormFields>
-          <Error>Det oppsto en feil ved sending av skjema.</Error>
-          <Success>skjemaet er nå sendt.</Success>
+          {
+            success ? <Sent>skjemaet er nå sendt.</Sent> : null
+          }
+          {
+            error ? <Error>Det oppsto en feil ved sending av skjema.</Error> : null
+          }
           <Button type="submit">Send</Button>
         </Form>
       </FormContainer>
